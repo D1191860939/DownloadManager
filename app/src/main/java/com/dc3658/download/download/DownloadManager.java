@@ -1,6 +1,11 @@
 package com.dc3658.download.download;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Environment;
+import android.os.IBinder;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -14,71 +19,49 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by xlh on 2017/10/22.
+ * @author xlh
+ * @date 2017/10/22
  */
 
 public class DownloadManager {
 
     private static final int READ_LENGTH = 2048;
-    private String destDir;
+    private DownloadCallBack mDownloadCallBack;
+    private String url;
 
-    public void startDownload(final String url){
+    private ServiceConnection conn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            DownloadService.DownloadBinder mBinder = (DownloadService.DownloadBinder) service;
+            mBinder.startDownloadInternal(DownloadManager.this, Environment.getExternalStorageDirectory() + "/download", url, READ_LENGTH);
+        }
 
-        destDir = Environment.getExternalStorageDirectory() + "/download";
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
 
-        File file = new File(destDir);
-        file.mkdirs();
+        }
+    };
 
-        OkHttpClient client = new OkHttpClient();
+    public DownloadManager(DownloadCallBack callBack) {
+        this.mDownloadCallBack = callBack;
+    }
 
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
+    public void startDownload(Context context, final String url) {
+        this.url = url;
+        Intent intent = new Intent(context, DownloadService.class);
+        context.startService(intent);
+        context.bindService(intent, conn, Context.BIND_AUTO_CREATE);
+    }
 
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
+    public void unregister(Context context) {
 
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-                InputStream is = null;
-                FileOutputStream fos = null;
-
-                try {
-
-                    is = response.body().byteStream();
-                    byte[] buff = new byte[READ_LENGTH];
-                    int len;
-
-                    long current =  0;
-                    long total = response.body().contentLength();
-
-                    fos =new FileOutputStream(destDir + getFileName(url));
-
-                    while ((len = is.read(buff)) != -1){
-                        current += len;
-                        fos.write(buff, 0, len);
-
-                    }
-
-                    fos.flush();
-                }catch (IOException e){
-
-                    StreamUtils.close(fos);
-                    StreamUtils.close(is);
-                }
-            }
-        });
+        if (conn != null) {
+            context.unbindService(conn);
+        }
 
     }
 
-    private String getFileName(String url){
-
-
-        return url.substring(url.lastIndexOf("/"));
+    public DownloadCallBack getDownloadCallBack() {
+        return mDownloadCallBack;
     }
-
 }

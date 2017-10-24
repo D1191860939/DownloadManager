@@ -1,14 +1,31 @@
 package com.dc3658.download.download;
 
 /**
- * Created by xlh on 2017/10/22.
+ * @author xlh
+ * @date 2017/10/22
  */
 
 public interface DownloadCallBack {
 
+    /**
+     * 下载成功的回调
+     *
+     * @param filename
+     */
     void onComplete(String filename);
 
+    /**
+     * 下载失败的回调
+     *
+     * @param t
+     */
     void onError(Throwable t);
 
-    void onProgress(int percent);
+    /**
+     * 下载中的回调
+     *
+     * @param filename
+     * @param percent
+     */
+    void onProgress(String filename, int percent);
 }
