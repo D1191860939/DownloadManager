@@ -22,7 +22,7 @@ public interface DownloadCallBack {
     void onError(Throwable t);
 
     /**
-     * 下载中的回调
+     * 进度更新的回调
      *
      * @param filename
      * @param percent
