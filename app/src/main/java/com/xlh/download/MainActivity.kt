@@ -1,11 +1,11 @@
-package com.dc3658.download
+package com.xlh.download
 
 import android.Manifest
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import com.dc3658.download.download.UpdateManager
-import com.dc3658.download.download.MPermissionUtils
+import com.xlh.download.download.UpdateManager
+import com.xlh.download.download.MPermissionUtils
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,20 +26,24 @@ class MainActivity : AppCompatActivity() {
         manager.unregister(this)
     }
 
+    /**
+     * 请修改此处
+     */
+    private val url: String = "http://imtt.dd.qq.com/16891/EBC72043DA2CDE0777C92D608B38573D.apk?fsname=com.zhihu.android_5.3.1_551.apk&csr=97c2"
 
     fun download(view: View) {
 
         MPermissionUtils.requestPermissionsResult(this, 100, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                 object : MPermissionUtils.OnPermissionListener {
 
-            override fun onPermissionGranted() {
-                manager.startDownload(this@MainActivity, "https://app.3658.com.cn/app-open-release-3658-1.2.0.apk")
-            }
+                    override fun onPermissionGranted() {
+                        manager.startDownload(this@MainActivity, url)
+                    }
 
-            override fun onPermissionDenied() {
+                    override fun onPermissionDenied() {
 
-            }
-        })
+                    }
+                })
 
     }
 

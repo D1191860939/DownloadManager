@@ -1,4 +1,4 @@
-package com.dc3658.download.download;
+package com.xlh.download.download;
 
 import android.app.Service;
 import android.content.Intent;
@@ -12,7 +12,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 
-import com.dc3658.download.R;
+import com.xlh.download.R;
 
 import java.io.File;
 
@@ -115,7 +115,7 @@ public class DownloadService extends Service {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Uri uri = FileProvider.getUriForFile(this, "com.dc3658.crm.downloadmanager.fileProvider", apkFile);
+            Uri uri = FileProvider.getUriForFile(this, "com.xlh.downloadmanager.fileProvider", apkFile);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.setDataAndType(uri, "application/vnd.android.package-archive");
         } else {
