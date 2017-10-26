@@ -26,9 +26,6 @@ class MainActivity : AppCompatActivity() {
         manager.unregister(this)
     }
 
-    /**
-     * 请修改此处
-     */
     private val url: String = "http://imtt.dd.qq.com/16891/EBC72043DA2CDE0777C92D608B38573D.apk?fsname=com.zhihu.android_5.3.1_551.apk&csr=97c2"
 
     fun download(view: View) {
